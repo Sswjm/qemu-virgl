@@ -155,7 +155,7 @@ enum {
 };
 
 struct virtio_gpu_ctrl_command {
-    VuVirtqElement elem;
+    VuVirtqElement elem;  // Virtio框架标准结构
     VuVirtq *vq;
     struct virtio_gpu_ctrl_hdr cmd_hdr;
     uint32_t error;

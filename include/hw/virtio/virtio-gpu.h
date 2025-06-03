@@ -133,7 +133,7 @@ struct virtio_gpu_base_conf {
 };
 
 struct virtio_gpu_ctrl_command {
-    VirtQueueElement elem;
+    VirtQueueElement elem;  // Virtio protocol standard structure
     VirtQueue *vq;
     struct virtio_gpu_ctrl_hdr cmd_hdr;
     uint32_t error;

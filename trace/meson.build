@@ -94,4 +94,5 @@ endif
 
 # add perfetto
 subdir('vperfetto')
-trace_ss.add(override_dependency('vperfetto'))
+trace_ss.add(files('qemu_vperfetto.c'))
+trace_ss.add(dep_vperfetto_min)

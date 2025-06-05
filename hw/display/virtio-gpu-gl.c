@@ -62,6 +62,7 @@ static void virtio_gpu_gl_flushed(VirtIOGPUBase *b)
 
 static void virtio_gpu_gl_handle_ctrl(VirtIODevice *vdev, VirtQueue *vq)
 {
+    TRACE_FUNC();
     VirtIOGPU *g = VIRTIO_GPU(vdev);
     VirtIOGPUGL *gl = VIRTIO_GPU_GL(vdev);
     struct virtio_gpu_ctrl_command *cmd;

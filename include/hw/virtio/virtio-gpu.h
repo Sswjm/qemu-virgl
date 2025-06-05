@@ -26,6 +26,8 @@
 #include "standard-headers/linux/virtio_ids.h"
 #include "qom/object.h"
 
+#include "trace/qemu_perfetto.h"
+
 #define TYPE_VIRTIO_GPU_BASE "virtio-gpu-base"
 OBJECT_DECLARE_TYPE(VirtIOGPUBase, VirtIOGPUBaseClass,
                     VIRTIO_GPU_BASE)

@@ -27,6 +27,7 @@
 #include "qemu/main-loop.h"
 #include "system/replay.h"
 #include "system/system.h"
+#include "trace/qemu_perfetto.h"
 
 #ifdef CONFIG_SDL
 /*
@@ -68,6 +69,7 @@ int (*qemu_main)(void) = os_darwin_cfrunloop_main;
 
 int main(int argc, char **argv)
 {
+    TRACE_INIT();
     qemu_init(argc, argv);
 
     /*

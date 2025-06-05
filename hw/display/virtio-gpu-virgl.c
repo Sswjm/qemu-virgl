@@ -455,6 +455,7 @@ static void virgl_cmd_set_scanout(VirtIOGPU *g,
 static void virgl_cmd_submit_3d(VirtIOGPU *g,
                                 struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_cmd_submit cs;
     void *buf;
     size_t s;
@@ -870,7 +871,8 @@ static void virgl_cmd_set_scanout_blob(VirtIOGPU *g,
 
 void virtio_gpu_virgl_process_cmd(VirtIOGPU *g,
                                       struct virtio_gpu_ctrl_command *cmd)
-{
+{   
+    TRACE_FUNC();
     bool cmd_suspended = false;
 
     VIRTIO_GPU_FILL_CMD(cmd->cmd_hdr);

@@ -91,3 +91,7 @@ trace_ss.add(files('control.c'))
 if have_system or have_tools or have_ga
   trace_ss.add(files('qmp.c'))
 endif
+
+# add perfetto
+subdir('vperfetto')
+trace_ss.add(override_dependency('vperfetto'))

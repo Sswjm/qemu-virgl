@@ -1030,6 +1030,7 @@ static void virtio_gpu_handle_cursor_cb(VirtIODevice *vdev, VirtQueue *vq)
 
 void virtio_gpu_process_cmdq(VirtIOGPU *g)
 {
+    TRACE_FUNC();
     struct virtio_gpu_ctrl_command *cmd;
     VirtIOGPUClass *vgc = VIRTIO_GPU_GET_CLASS(g);
 

@@ -3529,6 +3529,10 @@ if have_libvduse
   libvduse = libvduse_proj.get_variable('libvduse_dep')
 endif
 
+# add vperfetto
+vperfetto_proj = subproject('vperfetto')
+vperfetto = vperfetto_proj.get_variable('dep_vperfetto_min')
+
 #####################
 # Generated sources #
 #####################

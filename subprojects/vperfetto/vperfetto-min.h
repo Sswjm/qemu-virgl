@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #ifndef VPERFETTO_EXPORT
     #ifdef _MSC_VER
@@ -56,15 +57,15 @@ VPERFETTO_EXPORT void vperfetto_min_startTracing(const struct vperfetto_min_conf
 // End tracing. This is meant to be triggerd when tracing ends in the guest. Again, use your favorite transport.
 // This will also trigger trace saving. It is assumed that at around roughly this time, the host/guest also send over the finished trace from the guest to the host to the path specified in VPERFETTO_GUEST_FILE or traceconfig.guestFilename, such as via `adb pull /data/local/traces/guestfile.trace`.
 // After waiting for a while, the guest/host traces are post processed and catted together into VPERFETTO_COMBINED_FILE.
-VPERFETTO_EXPORT void vperfetto_min_endTracing();
+VPERFETTO_EXPORT void vperfetto_min_endTracing(void);
 
 // Start/end a particular track event on the host. By default, every such event is in the 'gfx' category.
 VPERFETTO_EXPORT void vperfetto_min_beginTrackEvent(const char* eventName);
-VPERFETTO_EXPORT void vperfetto_min_endTrackEvent();
+VPERFETTO_EXPORT void vperfetto_min_endTrackEvent(void);
 
 // Start/end a particular track event in a particular category.
 #define DEFINE_CATEGORY_TRACK_EVENT_DECLARATION(name, desc) \
     VPERFETTO_EXPORT void vperfetto_min_beginTrackEvent_##name(const char* eventName); \
-    VPERFETTO_EXPORT void vperfetto_min_endTrackEvent_##name(); \
+    VPERFETTO_EXPORT void vperfetto_min_endTrackEvent_##name(void); \
 
 VPERFETTO_LIST_CATEGORIES(DEFINE_CATEGORY_TRACK_EVENT_DECLARATION)

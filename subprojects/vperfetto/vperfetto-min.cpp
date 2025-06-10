@@ -172,7 +172,7 @@ VPERFETTO_EXPORT void vperfetto_min_endTracing() {
 
             sTracingSession.reset();
 
-            const char* hostFilename = sTraceConfig.hostFilename;
+            // const char* hostFilename = sTraceConfig.hostFilename;
             {
                 std::ofstream hostFile(sTraceConfig.hostFilename, std::ios::out | std::ios::binary);
                 hostFile.write(sTraceProgress.hostTrace.data(), sTraceProgress.hostTrace.size());

@@ -93,6 +93,7 @@ if have_system or have_tools or have_ga
 endif
 
 # add perfetto
-subdir('vperfetto')
-trace_ss.add(files('qemu_vperfetto.c'))
-trace_ss.add(dep_vperfetto_min)
+trace_ss.add(files('qemu_perfetto.c'))
+if vperfetto.found()
+  trace_ss.add(vperfetto)
+endif

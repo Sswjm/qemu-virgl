@@ -1,6 +1,8 @@
 /GNUmakefile
 /build/
 /build_test_perfetto/
+/build_kernel_irq/
+/build_qtest/
 /.cache/
 /.vscode/
 *.pyc

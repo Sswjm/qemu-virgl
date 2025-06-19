@@ -362,9 +362,13 @@ vhost_user_gpu_chr_read(void *opaque)
     uint32_t size, flags;
     int r;
 
+    /* TODO: fix virtio-gpu initialize error  */
+
     r = qemu_chr_fe_read_all(&g->vhost_chr,
                              (uint8_t *)&request, sizeof(uint32_t));
     if (r != sizeof(uint32_t)) {
+        fprintf(stderr, "qemu failed in function vhost_user_gpu_chr_read\n");
+        fprintf(stderr, "QEMU BACKTRACE: \n");
         error_report("failed to read msg header: %d, %d", r, errno);
         goto end;
     }

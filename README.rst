@@ -1,12 +1,23 @@
-# QEMU virgl optimization
+=======================
+QEMU virgl optimization
+=======================
 
 
-## Virgl QEMU侧优化branch
+Loongarch QEMU-VirtioGPU perfetto
+=================================
 
-- 命令转发零拷贝
-- 实时异步反馈
+将vperfetto工具集成到QEMU的virtio gpu中
 
-### 命令转发零拷贝
+Loongarch Kernel Interrupt
+==========================
 
-目标: 减少qemu侧virtio-gpu命令转发的内存拷贝次数
+中断控制下移，vhost-user前置条件
+
+Loongarch vhost-user-gpu
+========================
+
+fix: 
+
+1. 花屏，考虑framebuffer问题
+2. 启动grub后，guest drm无法初始化virtio gpu，考虑host侧配置问题？ 
 

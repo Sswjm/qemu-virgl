@@ -172,6 +172,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
 {
     QemuConsole *con = NULL;
     struct virtio_gpu_scanout *s;
+    fprintf(stderr, "QEMU: vhost_user_gpu_handle_display\n");
 
     switch (msg->request) {
     case VHOST_USER_GPU_GET_PROTOCOL_FEATURES: {
@@ -192,6 +193,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
         break;
     }
     case VHOST_USER_GPU_GET_DISPLAY_INFO: {
+        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_GET_DISPLAY_INFO\n");
         struct virtio_gpu_resp_display_info display_info = { {} };
         VhostUserGpuMsg reply = {
             .request = msg->request,
@@ -207,6 +209,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
         break;
     }
     case VHOST_USER_GPU_GET_EDID: {
+        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_GET_EDID\n");
         VhostUserGpuEdidRequest *m = &msg->payload.edid_req;
         struct virtio_gpu_resp_edid resp = { {} };
         VhostUserGpuMsg reply = {
@@ -222,6 +225,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
 
         resp.hdr.type = VIRTIO_GPU_RESP_OK_EDID;
         virtio_gpu_base_generate_edid(VIRTIO_GPU_BASE(g), m->scanout_id, &resp);
+        fprintf(stderr, "QEMU: successfully generate base edid\n");
         memcpy(&reply.payload.resp_edid, &resp, sizeof(resp));
         vhost_user_gpu_send_msg(g, &reply);
         break;

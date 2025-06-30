@@ -208,6 +208,7 @@ void virtio_gpu_get_display_info(VirtIOGPU *g,
 void virtio_gpu_get_edid(VirtIOGPU *g,
                          struct virtio_gpu_ctrl_command *cmd)
 {
+    fprintf(stderr, "QEMU EDID: start virtio_gpu_get_edid\n");
     struct virtio_gpu_resp_edid edid;
     struct virtio_gpu_cmd_get_edid get_edid;
     VirtIOGPUBase *b = VIRTIO_GPU_BASE(g);

@@ -172,10 +172,11 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
 {
     QemuConsole *con = NULL;
     struct virtio_gpu_scanout *s;
-    fprintf(stderr, "QEMU: vhost_user_gpu_handle_display\n");
+    // fprintf(stderr, "QEMU: vhost_user_gpu_handle_display\n");
 
     switch (msg->request) {
     case VHOST_USER_GPU_GET_PROTOCOL_FEATURES: {
+        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_GET_PROTCOL_FEATURES\n");
         VhostUserGpuMsg reply = {
             .request = msg->request,
             .flags = VHOST_USER_GPU_MSG_FLAG_REPLY,
@@ -190,6 +191,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
         break;
     }
     case VHOST_USER_GPU_SET_PROTOCOL_FEATURES: {
+        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_SET_PROTOCOL_FEATURES\n");
         break;
     }
     case VHOST_USER_GPU_GET_DISPLAY_INFO: {
@@ -231,6 +233,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
         break;
     }
     case VHOST_USER_GPU_SCANOUT: {
+        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_SCANOUT\n");
         VhostUserGpuScanout *m = &msg->payload.scanout;
 
         if (m->scanout_id >= g->parent_obj.conf.max_outputs) {
@@ -252,6 +255,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
     }
     case VHOST_USER_GPU_DMABUF_SCANOUT2:
     case VHOST_USER_GPU_DMABUF_SCANOUT: {
+        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_DMABUF_SCANOUT\n");
         VhostUserGpuDMABUFScanout *m = &msg->payload.dmabuf_scanout;
         int fd = qemu_chr_fe_get_msgfd(&g->vhost_chr);
         uint32_t offset = 0;
@@ -300,6 +304,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
         break;
     }
     case VHOST_USER_GPU_DMABUF_UPDATE: {
+        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_DMABUF_UPDATE\n");
         VhostUserGpuUpdate *m = &msg->payload.update;
 
         if (m->scanout_id >= g->parent_obj.conf.max_outputs ||
@@ -321,6 +326,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
     }
 #ifdef CONFIG_PIXMAN
     case VHOST_USER_GPU_UPDATE: {
+        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_UPDATE_PIXMAN\n");
         VhostUserGpuUpdate *m = &msg->payload.update;
 
         if (m->scanout_id >= g->parent_obj.conf.max_outputs) {

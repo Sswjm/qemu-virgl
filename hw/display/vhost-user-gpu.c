@@ -176,7 +176,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
 
     switch (msg->request) {
     case VHOST_USER_GPU_GET_PROTOCOL_FEATURES: {
-        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_GET_PROTCOL_FEATURES\n");
+        //fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_GET_PROTCOL_FEATURES\n");
         VhostUserGpuMsg reply = {
             .request = msg->request,
             .flags = VHOST_USER_GPU_MSG_FLAG_REPLY,
@@ -191,11 +191,11 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
         break;
     }
     case VHOST_USER_GPU_SET_PROTOCOL_FEATURES: {
-        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_SET_PROTOCOL_FEATURES\n");
+        //fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_SET_PROTOCOL_FEATURES\n");
         break;
     }
     case VHOST_USER_GPU_GET_DISPLAY_INFO: {
-        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_GET_DISPLAY_INFO\n");
+        //fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_GET_DISPLAY_INFO\n");
         struct virtio_gpu_resp_display_info display_info = { {} };
         VhostUserGpuMsg reply = {
             .request = msg->request,
@@ -211,7 +211,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
         break;
     }
     case VHOST_USER_GPU_GET_EDID: {
-        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_GET_EDID\n");
+        //fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_GET_EDID\n");
         VhostUserGpuEdidRequest *m = &msg->payload.edid_req;
         struct virtio_gpu_resp_edid resp = { {} };
         VhostUserGpuMsg reply = {
@@ -233,7 +233,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
         break;
     }
     case VHOST_USER_GPU_SCANOUT: {
-        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_SCANOUT\n");
+        //fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_SCANOUT\n");
         VhostUserGpuScanout *m = &msg->payload.scanout;
 
         if (m->scanout_id >= g->parent_obj.conf.max_outputs) {
@@ -255,7 +255,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
     }
     case VHOST_USER_GPU_DMABUF_SCANOUT2:
     case VHOST_USER_GPU_DMABUF_SCANOUT: {
-        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_DMABUF_SCANOUT\n");
+        //fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_DMABUF_SCANOUT\n");
         VhostUserGpuDMABUFScanout *m = &msg->payload.dmabuf_scanout;
         int fd = qemu_chr_fe_get_msgfd(&g->vhost_chr);
         uint32_t offset = 0;
@@ -304,7 +304,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
         break;
     }
     case VHOST_USER_GPU_DMABUF_UPDATE: {
-        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_DMABUF_UPDATE\n");
+        //fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_DMABUF_UPDATE\n");
         VhostUserGpuUpdate *m = &msg->payload.update;
 
         if (m->scanout_id >= g->parent_obj.conf.max_outputs ||
@@ -326,7 +326,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
     }
 #ifdef CONFIG_PIXMAN
     case VHOST_USER_GPU_UPDATE: {
-        fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_UPDATE_PIXMAN\n");
+        //fprintf(stderr, "QEMU: vhost_user_gpu_handle_display: VHOST_USER_GPU_UPDATE_PIXMAN\n");
         VhostUserGpuUpdate *m = &msg->payload.update;
 
         if (m->scanout_id >= g->parent_obj.conf.max_outputs) {
@@ -377,8 +377,8 @@ vhost_user_gpu_chr_read(void *opaque)
     r = qemu_chr_fe_read_all(&g->vhost_chr,
                              (uint8_t *)&request, sizeof(uint32_t));
     if (r != sizeof(uint32_t)) {
-        fprintf(stderr, "qemu failed in function vhost_user_gpu_chr_read\n");
-        fprintf(stderr, "QEMU BACKTRACE: \n");
+        //fprintf(stderr, "qemu failed in function vhost_user_gpu_chr_read\n");
+        //fprintf(stderr, "QEMU BACKTRACE: \n");
         error_report("failed to read msg header: %d, %d", r, errno);
         goto end;
     }

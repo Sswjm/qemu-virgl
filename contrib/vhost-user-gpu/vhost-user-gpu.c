@@ -1128,8 +1128,17 @@ vg_process_msg(VuDev *dev, VhostUserMsg *msg, int *do_reply)
     case VHOST_USER_GPU_SET_SOCKET: {
         g_return_val_if_fail(msg->fd_num == 1, 1);
         /* TODO: fix Loongarch assertion g->sock_fd == -1 failed */
-        fprintf(stderr, "[vhost-user-gpu DEBUG] vg_process_msg: g->sock_fd = %d, msg->fd_num = %d, msg->fds[0] = %d\n", g->sock_fd, msg->fd_num, msg->fds[0]);
-        g_return_val_if_fail(g->sock_fd == -1, 1);
+        // two debug messages
+        // -1 1 13
+        // 13 1 14
+        // fprintf(stderr, "[vhost-user-gpu DEBUG] vg_process_msg: g->sock_fd = %d, msg->fd_num = %d, msg->fds[0] = %d\n", g->sock_fd, msg->fd_num, msg->fds[0]);
+
+        // g_return_val_if_fail(g->sock_fd == -1, 1);
+        if (g->sock_fd != -1) {
+            fprintf(stderr, "[vhost-user-gpu DEBUG] vg_process_msg: closing old g->sock_fd = %d\n", g->sock_fd);
+            close(g->sock_fd);
+        }
+
         g->sock_fd = msg->fds[0];
         set_gpu_protocol_features(g);
         return 1;

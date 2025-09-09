@@ -122,6 +122,7 @@ static void vhost_user_gpu_update_blocked(VhostUserGPU *g, bool blocked);
 static void
 vhost_user_gpu_handle_cursor(VhostUserGPU *g, VhostUserGpuMsg *msg)
 {
+    TRACE_FUNC();
     VhostUserGpuCursorPos *pos = &msg->payload.cursor_pos;
     struct virtio_gpu_scanout *s;
 
@@ -152,6 +153,7 @@ vhost_user_gpu_handle_cursor(VhostUserGPU *g, VhostUserGpuMsg *msg)
 static void
 vhost_user_gpu_send_msg(VhostUserGPU *g, const VhostUserGpuMsg *msg)
 {
+    TRACE_FUNC();
     qemu_chr_fe_write(&g->vhost_chr, (uint8_t *)msg,
                       VHOST_USER_GPU_HDR_SIZE + msg->size);
 }
@@ -159,6 +161,7 @@ vhost_user_gpu_send_msg(VhostUserGPU *g, const VhostUserGpuMsg *msg)
 static void
 vhost_user_gpu_unblock(VhostUserGPU *g)
 {
+    TRACE_FUNC();
     VhostUserGpuMsg msg = {
         .request = VHOST_USER_GPU_DMABUF_UPDATE,
         .flags = VHOST_USER_GPU_MSG_FLAG_REPLY,
@@ -170,6 +173,7 @@ vhost_user_gpu_unblock(VhostUserGPU *g)
 static void
 vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
 {
+    TRACE_FUNC();
     QemuConsole *con = NULL;
     struct virtio_gpu_scanout *s;
     // fprintf(stderr, "QEMU: vhost_user_gpu_handle_display\n");
@@ -366,6 +370,7 @@ vhost_user_gpu_handle_display(VhostUserGPU *g, VhostUserGpuMsg *msg)
 static void
 vhost_user_gpu_chr_read(void *opaque)
 {
+    TRACE_FUNC();
     VhostUserGPU *g = opaque;
     VhostUserGpuMsg *msg = NULL;
     VhostUserGpuRequest request;
@@ -425,6 +430,7 @@ end:
 static void
 vhost_user_gpu_update_blocked(VhostUserGPU *g, bool blocked)
 {
+    TRACE_FUNC();
     qemu_set_fd_handler(g->vhost_gpu_fd,
                         blocked ? NULL : vhost_user_gpu_chr_read, NULL, g);
 }
@@ -432,6 +438,7 @@ vhost_user_gpu_update_blocked(VhostUserGPU *g, bool blocked)
 static void
 vhost_user_gpu_gl_flushed(VirtIOGPUBase *b)
 {
+    TRACE_FUNC();
     VhostUserGPU *g = VHOST_USER_GPU(b);
 
     if (g->backend_blocked) {
@@ -445,6 +452,7 @@ vhost_user_gpu_gl_flushed(VirtIOGPUBase *b)
 static bool
 vhost_user_gpu_do_set_socket(VhostUserGPU *g, Error **errp)
 {
+    TRACE_FUNC();
     Chardev *chr;
     int sv[2];
 
@@ -484,6 +492,7 @@ err:
 static void
 vhost_user_gpu_get_config(VirtIODevice *vdev, uint8_t *config_data)
 {
+    TRACE_FUNC();
     VhostUserGPU *g = VHOST_USER_GPU(vdev);
     VirtIOGPUBase *b = VIRTIO_GPU_BASE(vdev);
     struct virtio_gpu_config *vgconfig =
@@ -511,6 +520,7 @@ static void
 vhost_user_gpu_set_config(VirtIODevice *vdev,
                           const uint8_t *config_data)
 {
+    TRACE_FUNC();
     VhostUserGPU *g = VHOST_USER_GPU(vdev);
     VirtIOGPUBase *b = VIRTIO_GPU_BASE(vdev);
     const struct virtio_gpu_config *vgconfig =
@@ -533,6 +543,7 @@ vhost_user_gpu_set_config(VirtIODevice *vdev,
 static int
 vhost_user_gpu_set_status(VirtIODevice *vdev, uint8_t val)
 {
+    TRACE_FUNC();
     VhostUserGPU *g = VHOST_USER_GPU(vdev);
     Error *err = NULL;
 
@@ -562,6 +573,7 @@ vhost_user_gpu_set_status(VirtIODevice *vdev, uint8_t val)
 static bool
 vhost_user_gpu_guest_notifier_pending(VirtIODevice *vdev, int idx)
 {
+    TRACE_FUNC();
     VhostUserGPU *g = VHOST_USER_GPU(vdev);
 
     /*
@@ -579,6 +591,7 @@ vhost_user_gpu_guest_notifier_pending(VirtIODevice *vdev, int idx)
 static void
 vhost_user_gpu_guest_notifier_mask(VirtIODevice *vdev, int idx, bool mask)
 {
+    TRACE_FUNC();
     VhostUserGPU *g = VHOST_USER_GPU(vdev);
 
     /*

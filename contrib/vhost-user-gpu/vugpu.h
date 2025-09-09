@@ -24,6 +24,8 @@
 #include "qemu/bswap.h"
 #include "vugbm.h"
 
+#include <trace/qemu_perfetto.h>
+
 typedef enum VhostUserGpuRequest {
     VHOST_USER_GPU_NONE = 0,
     VHOST_USER_GPU_GET_PROTOCOL_FEATURES,

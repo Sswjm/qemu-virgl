@@ -97,6 +97,7 @@ vg_cmd_to_string(int cmd)
 static int
 vg_sock_fd_read(int sock, void *buf, ssize_t buflen)
 {
+    TRACE_FUNC();
     int ret;
 
     do {
@@ -110,6 +111,7 @@ vg_sock_fd_read(int sock, void *buf, ssize_t buflen)
 static void
 vg_sock_fd_close(VuGpu *g)
 {
+    TRACE_FUNC();
     if (g->sock_fd >= 0) {
         close(g->sock_fd);
         g->sock_fd = -1;
@@ -119,6 +121,7 @@ vg_sock_fd_close(VuGpu *g)
 static gboolean
 source_wait_cb(gint fd, GIOCondition condition, gpointer user_data)
 {
+    TRACE_FUNC();
     VuGpu *g = user_data;
 
     if (!vg_recv_msg(g, VHOST_USER_GPU_DMABUF_UPDATE, 0, NULL)) {
@@ -135,6 +138,7 @@ source_wait_cb(gint fd, GIOCondition condition, gpointer user_data)
 void
 vg_wait_ok(VuGpu *g)
 {
+    TRACE_FUNC();
     assert(g->wait_in == 0);
     g->wait_in = g_unix_fd_add(g->sock_fd, G_IO_IN | G_IO_HUP,
                                source_wait_cb, g);
@@ -143,6 +147,7 @@ vg_wait_ok(VuGpu *g)
 static int
 vg_sock_fd_write(int sock, const void *buf, ssize_t buflen, int fd)
 {
+    TRACE_FUNC();
     ssize_t ret;
     struct iovec iov = {
         .iov_base = (void *)buf,
@@ -181,6 +186,7 @@ vg_sock_fd_write(int sock, const void *buf, ssize_t buflen, int fd)
 void
 vg_send_msg(VuGpu *vg, const VhostUserGpuMsg *msg, int fd)
 {
+    TRACE_FUNC();
     if (vg_sock_fd_write(vg->sock_fd, msg,
                          VHOST_USER_GPU_HDR_SIZE + msg->size, fd) < 0) {
         vg_sock_fd_close(vg);
@@ -191,6 +197,7 @@ bool
 vg_recv_msg(VuGpu *g, uint32_t expect_req, uint32_t expect_size,
             gpointer payload)
 {
+    TRACE_FUNC();
     uint32_t req, flags, size;
 
     if (vg_sock_fd_read(g->sock_fd, &req, sizeof(req)) < 0 ||
@@ -217,6 +224,7 @@ err:
 static struct virtio_gpu_simple_resource *
 virtio_gpu_find_resource(VuGpu *g, uint32_t resource_id)
 {
+    TRACE_FUNC();
     struct virtio_gpu_simple_resource *res;
 
     QTAILQ_FOREACH(res, &g->reslist, next) {
@@ -233,6 +241,7 @@ vg_ctrl_response(VuGpu *g,
                  struct virtio_gpu_ctrl_hdr *resp,
                  size_t resp_len)
 {
+    TRACE_FUNC();
     size_t s;
 
     if (cmd->cmd_hdr.flags & VIRTIO_GPU_FLAG_FENCE) {
@@ -256,6 +265,7 @@ vg_ctrl_response_nodata(VuGpu *g,
                         struct virtio_gpu_ctrl_command *cmd,
                         enum virtio_gpu_ctrl_type type)
 {
+    TRACE_FUNC();
     struct virtio_gpu_ctrl_hdr resp = {
         .type = type,
     };
@@ -267,6 +277,7 @@ vg_ctrl_response_nodata(VuGpu *g,
 static gboolean
 get_display_info_cb(gint fd, GIOCondition condition, gpointer user_data)
 {
+    TRACE_FUNC();
     struct virtio_gpu_resp_display_info dpy_info = { {} };
     VuGpu *vg = user_data;
     struct virtio_gpu_ctrl_command *cmd = QTAILQ_LAST(&vg->fenceq);
@@ -290,6 +301,7 @@ get_display_info_cb(gint fd, GIOCondition condition, gpointer user_data)
 void
 vg_get_display_info(VuGpu *vg, struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     VhostUserGpuMsg msg = {
         .request = VHOST_USER_GPU_GET_DISPLAY_INFO,
         .size = 0,
@@ -306,6 +318,7 @@ vg_get_display_info(VuGpu *vg, struct virtio_gpu_ctrl_command *cmd)
 static gboolean
 get_edid_cb(gint fd, GIOCondition condition, gpointer user_data)
 {
+    TRACE_FUNC();
     struct virtio_gpu_resp_edid resp_edid;
     VuGpu *vg = user_data;
     struct virtio_gpu_ctrl_command *cmd = QTAILQ_LAST(&vg->fenceq);
@@ -329,6 +342,7 @@ get_edid_cb(gint fd, GIOCondition condition, gpointer user_data)
 void
 vg_get_edid(VuGpu *vg, struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_cmd_get_edid get_edid;
 
     VUGPU_FILL_CMD(get_edid);
@@ -354,6 +368,7 @@ static void
 vg_resource_create_2d(VuGpu *g,
                       struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     pixman_format_code_t pformat;
     struct virtio_gpu_simple_resource *res;
     struct virtio_gpu_resource_create_2d c2d;
@@ -409,6 +424,7 @@ vg_resource_create_2d(VuGpu *g,
 static void
 vg_disable_scanout(VuGpu *g, int scanout_id)
 {
+    TRACE_FUNC();
     struct virtio_gpu_scanout *scanout = &g->scanout[scanout_id];
     struct virtio_gpu_simple_resource *res;
 
@@ -438,6 +454,7 @@ static void
 vg_resource_destroy(VuGpu *g,
                     struct virtio_gpu_simple_resource *res)
 {
+    TRACE_FUNC();
     int i;
 
     if (res->scanout_bitmask) {
@@ -459,6 +476,7 @@ static void
 vg_resource_unref(VuGpu *g,
                   struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_simple_resource *res;
     struct virtio_gpu_resource_unref unref;
 
@@ -481,6 +499,7 @@ vg_create_mapping_iov(VuGpu *g,
                       struct virtio_gpu_ctrl_command *cmd,
                       struct iovec **iov)
 {
+    TRACE_FUNC();
     struct virtio_gpu_mem_entry *ents;
     size_t esize, s;
     int i;
@@ -524,6 +543,7 @@ static void
 vg_resource_attach_backing(VuGpu *g,
                            struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_simple_resource *res;
     struct virtio_gpu_resource_attach_backing ab;
     int ret;
@@ -557,6 +577,7 @@ vg_resource_attach_backing(VuGpu *g,
 void vg_cleanup_mapping_iov(VuGpu *g,
                             struct iovec *iov, uint32_t count)
 {
+    TRACE_FUNC();
     g_free(iov);
 }
 
@@ -564,6 +585,7 @@ static void
 vg_cleanup_mapping(VuGpu *g,
                    struct virtio_gpu_simple_resource *res)
 {
+    TRACE_FUNC();
     vg_cleanup_mapping_iov(g, res->iov, res->iov_cnt);
     res->iov = NULL;
     res->iov_cnt = 0;
@@ -573,6 +595,7 @@ static void
 vg_resource_detach_backing(VuGpu *g,
                            struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_simple_resource *res;
     struct virtio_gpu_resource_detach_backing detach;
 
@@ -594,6 +617,7 @@ static void
 vg_transfer_to_host_2d(VuGpu *g,
                        struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_simple_resource *res;
     int h;
     uint32_t src_offset, dst_offset, stride;
@@ -653,6 +677,7 @@ static void
 vg_set_scanout(VuGpu *g,
                struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_simple_resource *res, *ores;
     struct virtio_gpu_scanout *scanout;
     struct virtio_gpu_set_scanout ss;
@@ -751,6 +776,7 @@ static void
 vg_resource_flush(VuGpu *g,
                   struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_simple_resource *res;
     struct virtio_gpu_resource_flush rf;
     pixman_region16_t flush_region;
@@ -859,6 +885,7 @@ vg_resource_flush(VuGpu *g,
 static void
 vg_process_cmd(VuGpu *vg, struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     switch (cmd->cmd_hdr.type) {
     case VIRTIO_GPU_CMD_GET_DISPLAY_INFO:
         vg_get_display_info(vg, cmd);
@@ -901,6 +928,7 @@ vg_process_cmd(VuGpu *vg, struct virtio_gpu_ctrl_command *cmd)
 static void
 vg_handle_ctrl(VuDev *dev, int qidx)
 {
+    TRACE_FUNC();
     VuGpu *vg = container_of(dev, VuGpu, dev.parent);
     VuVirtq *vq = vu_get_queue(dev, qidx);
     struct virtio_gpu_ctrl_command *cmd = NULL;
@@ -948,6 +976,7 @@ vg_handle_ctrl(VuDev *dev, int qidx)
 static void
 update_cursor_data_simple(VuGpu *g, uint32_t resource_id, gpointer data)
 {
+    TRACE_FUNC();
     struct virtio_gpu_simple_resource *res;
 
     res = virtio_gpu_find_resource(g, resource_id);
@@ -963,6 +992,7 @@ update_cursor_data_simple(VuGpu *g, uint32_t resource_id, gpointer data)
 static void
 vg_process_cursor_cmd(VuGpu *g, struct virtio_gpu_update_cursor *cursor)
 {
+    TRACE_FUNC();
     switch (cursor->hdr.type) {
     case VIRTIO_GPU_CMD_MOVE_CURSOR: {
         VhostUserGpuMsg msg = {
@@ -1013,6 +1043,7 @@ vg_process_cursor_cmd(VuGpu *g, struct virtio_gpu_update_cursor *cursor)
 static void
 vg_handle_cursor(VuDev *dev, int qidx)
 {
+    TRACE_FUNC();
     VuGpu *g = container_of(dev, VuGpu, dev.parent);
     VuVirtq *vq = vu_get_queue(dev, qidx);
     VuVirtqElement *elem;
@@ -1044,6 +1075,7 @@ vg_handle_cursor(VuDev *dev, int qidx)
 static void
 vg_panic(VuDev *dev, const char *msg)
 {
+    TRACE_FUNC();
     g_critical("%s\n", msg);
     exit(1);
 }
@@ -1051,6 +1083,7 @@ vg_panic(VuDev *dev, const char *msg)
 static void
 vg_queue_set_started(VuDev *dev, int qidx, bool started)
 {
+    TRACE_FUNC();
     VuVirtq *vq = vu_get_queue(dev, qidx);
 
     g_debug("queue started %d:%d\n", qidx, started);
@@ -1070,6 +1103,7 @@ vg_queue_set_started(VuDev *dev, int qidx, bool started)
 static gboolean
 protocol_features_cb(gint fd, GIOCondition condition, gpointer user_data)
 {
+    TRACE_FUNC();
     const uint64_t protocol_edid = (1 << VHOST_USER_GPU_PROTOCOL_F_EDID);
     const uint64_t protocol_dmabuf2 = (1 << VHOST_USER_GPU_PROTOCOL_F_DMABUF2);
     VuGpu *g = user_data;
@@ -1109,6 +1143,7 @@ protocol_features_cb(gint fd, GIOCondition condition, gpointer user_data)
 static void
 set_gpu_protocol_features(VuGpu *g)
 {
+    TRACE_FUNC();
     VhostUserGpuMsg msg = {
         .request = VHOST_USER_GPU_GET_PROTOCOL_FEATURES,
     };
@@ -1122,6 +1157,7 @@ set_gpu_protocol_features(VuGpu *g)
 static int
 vg_process_msg(VuDev *dev, VhostUserMsg *msg, int *do_reply)
 {
+    TRACE_FUNC();
     VuGpu *g = container_of(dev, VuGpu, dev.parent);
 
     switch (msg->request) {
@@ -1153,6 +1189,7 @@ vg_process_msg(VuDev *dev, VhostUserMsg *msg, int *do_reply)
 static uint64_t
 vg_get_features(VuDev *dev)
 {
+    TRACE_FUNC();
     uint64_t features = 0;
 
     if (opt_virgl) {
@@ -1166,6 +1203,7 @@ vg_get_features(VuDev *dev)
 static void
 vg_set_features(VuDev *dev, uint64_t features)
 {
+    TRACE_FUNC();
     VuGpu *g = container_of(dev, VuGpu, dev.parent);
     bool virgl = features & (1 << VIRTIO_GPU_F_VIRGL);
 
@@ -1184,6 +1222,7 @@ vg_set_features(VuDev *dev, uint64_t features)
 static int
 vg_get_config(VuDev *dev, uint8_t *config, uint32_t len)
 {
+    TRACE_FUNC();
     VuGpu *g = container_of(dev, VuGpu, dev.parent);
 
     if (len > sizeof(struct virtio_gpu_config)) {
@@ -1204,6 +1243,7 @@ vg_set_config(VuDev *dev, const uint8_t *data,
               uint32_t offset, uint32_t size,
               uint32_t flags)
 {
+    TRACE_FUNC();
     VuGpu *g = container_of(dev, VuGpu, dev.parent);
     struct virtio_gpu_config *config = (struct virtio_gpu_config *)data;
 
@@ -1226,6 +1266,7 @@ static const VuDevIface vuiface = {
 static void
 vg_destroy(VuGpu *g)
 {
+    TRACE_FUNC();
     struct virtio_gpu_simple_resource *res, *tmp;
 
     vug_deinit(&g->dev);
@@ -1256,6 +1297,7 @@ static GOptionEntry entries[] = {
 int
 main(int argc, char *argv[])
 {
+    TRACE_INIT();
     GOptionContext *context;
     GError *error = NULL;
     GMainLoop *loop = NULL;

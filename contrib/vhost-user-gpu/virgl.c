@@ -22,6 +22,7 @@ void
 vg_virgl_update_cursor_data(VuGpu *g, uint32_t resource_id,
                             gpointer data)
 {
+    TRACE_FUNC();
     uint32_t width, height;
     uint32_t *cursor;
 
@@ -38,6 +39,7 @@ static void
 virgl_cmd_context_create(VuGpu *g,
                          struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_ctx_create cc;
 
     VUGPU_FILL_CMD(cc);
@@ -50,6 +52,7 @@ static void
 virgl_cmd_context_destroy(VuGpu *g,
                           struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_ctx_destroy cd;
 
     VUGPU_FILL_CMD(cd);
@@ -61,6 +64,7 @@ static void
 virgl_cmd_create_resource_2d(VuGpu *g,
                              struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_resource_create_2d c2d;
     struct virgl_renderer_resource_create_args args;
 
@@ -84,6 +88,7 @@ static void
 virgl_cmd_create_resource_3d(VuGpu *g,
                              struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_resource_create_3d c3d;
     struct virgl_renderer_resource_create_args args;
 
@@ -107,6 +112,7 @@ static void
 virgl_cmd_resource_unref(VuGpu *g,
                          struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_resource_unref unref;
     struct iovec *res_iovs = NULL;
     int num_iovs = 0;
@@ -131,6 +137,7 @@ static void
 virgl_cmd_get_capset_info(VuGpu *g,
                           struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_get_capset_info info;
     struct virtio_gpu_resp_capset_info resp;
 
@@ -158,6 +165,7 @@ virgl_cmd_get_capset_info(VuGpu *g,
 uint32_t
 vg_virgl_get_num_capsets(void)
 {
+    TRACE_FUNC();
     uint32_t capset2_max_ver, capset2_max_size;
     virgl_renderer_get_cap_set(VIRTIO_GPU_CAPSET_VIRGL2,
                                &capset2_max_ver,
@@ -170,6 +178,7 @@ static void
 virgl_cmd_get_capset(VuGpu *g,
                      struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_get_capset gc;
     struct virtio_gpu_resp_capset *resp;
     uint32_t max_ver, max_size;
@@ -196,6 +205,7 @@ static void
 virgl_cmd_submit_3d(VuGpu *g,
                     struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_cmd_submit cs;
     void *buf;
     size_t s;
@@ -221,6 +231,7 @@ static void
 virgl_cmd_transfer_to_host_2d(VuGpu *g,
                               struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_transfer_to_host_2d t2d;
     struct virtio_gpu_box box;
 
@@ -246,6 +257,7 @@ static void
 virgl_cmd_transfer_to_host_3d(VuGpu *g,
                               struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_transfer_host_3d t3d;
 
     VUGPU_FILL_CMD(t3d);
@@ -263,6 +275,7 @@ static void
 virgl_cmd_transfer_from_host_3d(VuGpu *g,
                                 struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_transfer_host_3d tf3d;
 
     VUGPU_FILL_CMD(tf3d);
@@ -280,6 +293,7 @@ static void
 virgl_resource_attach_backing(VuGpu *g,
                               struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_resource_attach_backing att_rb;
     struct iovec *res_iovs;
     int ret;
@@ -303,6 +317,7 @@ static void
 virgl_resource_detach_backing(VuGpu *g,
                               struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_resource_detach_backing detach_rb;
     struct iovec *res_iovs = NULL;
     int num_iovs = 0;
@@ -323,6 +338,7 @@ virgl_get_resource_info_modifiers(uint32_t resource_id,
                                   struct virgl_renderer_resource_info *info,
                                   uint64_t *modifiers)
 {
+    TRACE_FUNC();
     int ret;
 #ifdef VIRGL_RENDERER_RESOURCE_INFO_EXT_VERSION
     struct virgl_renderer_resource_info_ext info_ext;
@@ -353,6 +369,7 @@ static void
 virgl_cmd_set_scanout(VuGpu *g,
                       struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_set_scanout ss;
     struct virgl_renderer_resource_info info;
     int ret;
@@ -430,6 +447,7 @@ static void
 virgl_cmd_resource_flush(VuGpu *g,
                          struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_resource_flush rf;
     int i;
 
@@ -462,6 +480,7 @@ static void
 virgl_cmd_ctx_attach_resource(VuGpu *g,
                               struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_ctx_resource att_res;
 
     VUGPU_FILL_CMD(att_res);
@@ -473,6 +492,7 @@ static void
 virgl_cmd_ctx_detach_resource(VuGpu *g,
                               struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     struct virtio_gpu_ctx_resource det_res;
 
     VUGPU_FILL_CMD(det_res);
@@ -482,6 +502,7 @@ virgl_cmd_ctx_detach_resource(VuGpu *g,
 
 void vg_virgl_process_cmd(VuGpu *g, struct virtio_gpu_ctrl_command *cmd)
 {
+    TRACE_FUNC();
     virgl_renderer_force_ctx_0();
     switch (cmd->cmd_hdr.type) {
     case VIRTIO_GPU_CMD_CTX_CREATE:
@@ -573,6 +594,7 @@ void vg_virgl_process_cmd(VuGpu *g, struct virtio_gpu_ctrl_command *cmd)
 static void
 virgl_write_fence(void *opaque, uint32_t fence)
 {
+    TRACE_FUNC();
     VuGpu *g = opaque;
     struct virtio_gpu_ctrl_command *cmd, *tmp;
 
@@ -597,6 +619,7 @@ virgl_write_fence(void *opaque, uint32_t fence)
 static int
 virgl_get_drm_fd(void *opaque)
 {
+    TRACE_FUNC();
     VuGpu *g = opaque;
 
     return g->drm_rnode_fd;
@@ -617,12 +640,14 @@ static struct virgl_renderer_callbacks virgl_cbs = {
 static void
 vg_virgl_poll(VuDev *dev, int condition, void *data)
 {
+    TRACE_FUNC();
     virgl_renderer_poll();
 }
 
 bool
 vg_virgl_init(VuGpu *g)
 {
+    TRACE_FUNC();
     int ret;
 
     if (g->drm_rnode_fd && virgl_cbs.version == 1) {

@@ -365,6 +365,7 @@ virgl_get_resource_info_modifiers(uint32_t resource_id,
     return 0;
 }
 
+
 static void
 virgl_cmd_set_scanout(VuGpu *g,
                       struct virtio_gpu_ctrl_command *cmd)
@@ -375,6 +376,9 @@ virgl_cmd_set_scanout(VuGpu *g,
     int ret;
 
     VUGPU_FILL_CMD(ss);
+
+    // debug: display scanout
+    // fprintf(stderr, "DEBUG vhost-user-gpu: scanout width: %d, height: %d\n", ss.r.width, ss.r.height);
 
     if (ss.scanout_id >= VIRTIO_GPU_MAX_SCANOUTS) {
         g_critical("%s: illegal scanout id specified %d",
@@ -403,6 +407,9 @@ virgl_cmd_set_scanout(VuGpu *g,
             return;
         }
         assert(fd >= 0);
+        
+        // fprintf(stderr, "DEBUG virgl_cmd_set_scanout: ss.r.width: %d, ss.r.height: %d, info.width: %d, info.height: %d\n", ss.r.width, ss.r.height, info.width, info.height);
+
         VhostUserGpuMsg msg = {
             .payload.dmabuf_scanout.scanout_id = ss.scanout_id,
             .payload.dmabuf_scanout.x =  ss.r.x,
@@ -462,6 +469,9 @@ virgl_cmd_resource_flush(VuGpu *g,
         if (g->scanout[i].resource_id != rf.resource_id) {
             continue;
         }
+
+        // fprintf(stderr, "DEBUG virgl_cmd_resource_flush: rf.r.width: %d, rf.r.height: %d\n", rf.r.width, rf.r.height);
+
         VhostUserGpuMsg msg = {
             .request = VHOST_USER_GPU_DMABUF_UPDATE,
             .size = sizeof(VhostUserGpuUpdate),

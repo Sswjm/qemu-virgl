@@ -738,6 +738,9 @@ vg_set_scanout(VuGpu *g,
     struct vugbm_buffer *buffer = &res->buffer;
 
     if (vugbm_buffer_can_get_dmabuf_fd(buffer)) {
+        fprintf(stderr, "DBEUG: vg_set_scanout: vugbm_buffer_can_get_dmabuf_fd\n");
+        fprintf(stderr, "DEBUG: vg_set_scanout: ss.r.width: %d, ss.r.height: %d\n", ss.r.width, ss.r.height);
+
         VhostUserGpuMsg msg = {
             .request = VHOST_USER_GPU_DMABUF_SCANOUT,
             .size = sizeof(VhostUserGpuDMABUFScanout),
@@ -759,6 +762,9 @@ vg_set_scanout(VuGpu *g,
             close(fd);
         }
     } else {
+        fprintf(stderr, "DBEUG: vg_set_scanout: vugvm_buffer_cannot_get_dmabuf_fd\n");
+        fprintf(stderr, "DBEUG: vg_set_scanout: width: %d, height: %d\n", scanout->width, scanout->height);
+
         VhostUserGpuMsg msg = {
             .request = VHOST_USER_GPU_SCANOUT,
             .size = sizeof(VhostUserGpuScanout),

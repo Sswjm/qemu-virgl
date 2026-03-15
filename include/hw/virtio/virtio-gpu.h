@@ -27,6 +27,7 @@
 #include "qom/object.h"
 
 #include "trace/qemu_perfetto.h"
+#include "hw/virtio/virtio-gpu-poll-adaptive.h"
 
 #define TYPE_VIRTIO_GPU_BASE "virtio-gpu-base"
 OBJECT_DECLARE_TYPE(VirtIOGPUBase, VirtIOGPUBaseClass,
@@ -252,6 +253,9 @@ struct VirtIOGPUGL {
     QEMUTimer *print_stats;
 
     QEMUBH *cmdq_resume_bh;
+
+    VGPUDynPollKalman dyn;
+    int last_fenceq_len;
 };
 
 struct VhostUserGPU {

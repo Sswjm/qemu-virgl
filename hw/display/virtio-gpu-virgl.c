@@ -1112,10 +1112,26 @@ static void virtio_gpu_fence_poll(void *opaque)
 
     fprintf(stderr, "DEBUG virtio-gpu-virgl: virtio_gpu_fence_poll\n");
 
+    uint64_t t0 = qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
+
+    int fenceq_before = count_fenceq(g); /* 你可维护计数或遍历 */
+    int cmdq_len      = count_cmdq(g);
+
     virgl_renderer_poll();
     virtio_gpu_process_cmdq(g);
+
+    int fenceq_after = count_fenceq(g);
+    bool success = (fenceq_after < fenceq_before) || (fenceq_after == 0 && cmdq_len == 0);
+
+    uint64_t t1 = qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
+    double observed = (double)(t1 - t0);
+
+    vgpu_dynpoll_kalman_update(&gl->dyn, observed, success, cmdq_len, fenceq_after);
+
     if (!QTAILQ_EMPTY(&g->cmdq) || !QTAILQ_EMPTY(&g->fenceq)) {
-        timer_mod(gl->fence_poll, qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL) + 5);
+        int next = vgpu_dynpoll_kalman_get_interval(&gl->dyn);
+        timer_mod(gl->fence_poll, qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL) + next);
+        // timer_mod(gl->fence_poll, qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL) + 5);
         // timer_mod(gl->fence_poll, qemu_clock_get_us(QEMU_CLOCK_VIRTUAL) + 10);
     }
 }
@@ -1186,6 +1202,19 @@ int virtio_gpu_virgl_init(VirtIOGPU *g)
                                     virtio_gpu_virgl_resume_cmdq_bh,
                                     g);
 #endif
+
+    // init kalman timer
+    vgpu_dynpoll_kalman_init(&gl->dyn,
+        10, /* init */
+        1,  /* min */
+        50, /* max */
+        1,  /* dec_ms */
+        2,  /* inc_ms */
+        10.0, 100.0, /* Kalman init_x/init_P */
+        4.0, 25.0,   /* Q/R */
+        10           /* win_size */
+    );
+    gl->last_fenceq_len = 0;
 
     return 0;
 }
